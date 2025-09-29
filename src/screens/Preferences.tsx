@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -22,7 +23,7 @@ const Preferences: React.FC<Props> = ({ navigation }) => {
   const [userName, setUserName] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [role, setRole]         = useState<string>('Admin');
+  const [role, setRole] = useState<string>('Admin');
 
   const { t, i18n } = useTranslation(); 
 
@@ -38,6 +39,23 @@ const Preferences: React.FC<Props> = ({ navigation }) => {
       if (rl)   setRole(rl);
     })();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.multiRemove([
+        USER_NAME_KEY,
+        USER_ID_KEY,
+        USER_EMAIL_KEY,
+        USER_ROLE_KEY
+      ]);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }], 
+      });
+    } catch (err) {
+      Alert.alert("Erro", "Não foi possível realizar o logout.");
+    }
+  };
 
   if (!i18n.isInitialized) {
     return <Text style={{ color: 'white' }}>Carregando idioma...</Text>;
@@ -69,6 +87,13 @@ const Preferences: React.FC<Props> = ({ navigation }) => {
         onPress={() => navigation.goBack()}
       >
         <Text style={styles.backButtonText}>{t('back')}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.backButton, { backgroundColor: "red", marginTop: 16 }]}
+        onPress={handleLogout}
+      >
+        <Text style={styles.backButtonText}>Sair</Text>
       </TouchableOpacity>
     </ScrollView>
   );
