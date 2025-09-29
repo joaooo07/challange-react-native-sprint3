@@ -11,6 +11,9 @@ import PatioMap from "@/screens/PatioMap";
 import FormEntry from "@/screens/FormEntry";
 import Preferences from "@/screens/Preferences";
 import Register from "@/screens/Register";
+import Users from "@/screens/Users";
+import Units from "@/screens/Units";
+
 
 export type RootStackParamList = {
   Login: undefined;
@@ -20,6 +23,8 @@ export type RootStackParamList = {
   FormEntry: { slotId: string; patioId: string };
   Preferences: undefined;
   Register: undefined;
+  Users: undefined; 
+  Units: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -106,6 +111,9 @@ export default function AppNavigation() {
         <Stack.Screen name="FormEntry" component={FormEntry} />
         <Stack.Screen name="Preferences" component={Preferences} />
         <Stack.Screen name="Register" component={Register} options={{ title: "Cadastro" }} />
+        <Stack.Screen name="Users" component={Users} options={{ title: "Usuários" }} />
+        <Stack.Screen name="Units" component={Units} options={{ title: "Unidades" }} /> 
+
       </Stack.Navigator>
     </NavigationContainer>
   );

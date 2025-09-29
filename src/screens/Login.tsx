@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation';
 import { login } from '@/services/authService'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -45,14 +46,16 @@ const Login: React.FC = () => {
     try {
       const user = await login({ email, senha: password });
       console.log("Usuário autenticado:", user);
+      await AsyncStorage.setItem("prefs_user_id", user.id.toString());
+      await AsyncStorage.setItem("prefs_user_name", user.nome);
+      await AsyncStorage.setItem("prefs_user_email", user.email);
+      await AsyncStorage.setItem("prefs_user_role", "Admin")
       navigation.navigate("Home");
     } catch (err: any) {
       console.error(err);
       alert(err.message || "Erro ao autenticar.");
     }
   };
-
-
 
   const handleGoogle = () => {
     setModalVisible(true);

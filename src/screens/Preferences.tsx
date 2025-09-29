@@ -19,9 +19,9 @@ const USER_ROLE_KEY = 'prefs_user_role';
 type Props = NativeStackScreenProps<RootStackParamList, 'Preferences'>;
 
 const Preferences: React.FC<Props> = ({ navigation }) => {
-  const [userName, setUserName] = useState<string>('João Pedro Motta');
-  const [userId, setUserId]     = useState<string>('RM556557');
-  const [email, setEmail]       = useState<string>('jpmarcolinix@gmail.com');
+  const [userName, setUserName] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [role, setRole]         = useState<string>('Admin');
 
   const { t, i18n } = useTranslation(); 

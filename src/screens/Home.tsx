@@ -36,6 +36,19 @@ const Home: React.FC = () => {
       >
         <Text style={styles.buttonText}>{t('form_entry')}</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Users')}
+        >
+          <Text style={styles.buttonText}>Gerenciar Usuários</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Units")}
+        >
+          <Text style={styles.buttonText}>Gerenciar Patios</Text>
+        </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
