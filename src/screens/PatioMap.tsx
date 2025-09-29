@@ -11,9 +11,9 @@ import {
   ScrollView
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '@/navigation';
 import { getSlots, saveSlots, Slot as SlotType } from '../storage/storage';
-import { useTranslation } from 'react-i18next'; // i18n importado
+import { useTranslation } from 'react-i18next'; 
 
 const patiosData: Record<string, SlotType[]> = {
   p1: [

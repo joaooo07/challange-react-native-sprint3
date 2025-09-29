@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App'; 
+import { RootStackParamList } from '@/navigation';
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -142,10 +142,12 @@ const Login: React.FC = () => {
           />
           <Text style={styles.socialButtonText}>Entrar com Microsoft</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.registerButton}>
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={() => navigation.navigate("Register")}
+        >
           <Text style={styles.registerText}>Não tem conta? Cadastre-se</Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
       </Animated.View>
     </KeyboardAvoidingView>
   );

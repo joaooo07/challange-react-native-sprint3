@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '@/navigation';
 import { useTranslation } from 'react-i18next'; 
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -25,14 +25,14 @@ const Home: React.FC = () => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('PatiosList')}
+        onPress={() => navigation.navigate('PatioList')}
       >
         <Text style={styles.buttonText}>{t('patios')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('FormEntry')}
+        onPress={() => navigation.navigate('FormEntry', { slotId: "123", patioId: "p1" })}
       >
         <Text style={styles.buttonText}>{t('form_entry')}</Text>
       </TouchableOpacity>

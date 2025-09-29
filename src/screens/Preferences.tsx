@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '@/navigation';
 import { useTranslation } from 'react-i18next';
 
 const USER_NAME_KEY = 'prefs_user_name';
