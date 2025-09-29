@@ -14,6 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation';
+import { login } from '@/services/authService'; 
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -40,13 +41,18 @@ const Login: React.FC = () => {
     ]).start();
   }, []);
 
-  const handleLogin = () => {
-    if (email === 'admin@mottu.com' && password === '123456') {
-      navigation.navigate('Home');
-    } else {
-      alert('Credenciais inválidas. \nEmail: admin@mottu.com\n Senha: 123456');
+  const handleLogin = async () => {
+    try {
+      const user = await login({ email, senha: password });
+      console.log("Usuário autenticado:", user);
+      navigation.navigate("Home");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Erro ao autenticar.");
     }
   };
+
+
 
   const handleGoogle = () => {
     setModalVisible(true);

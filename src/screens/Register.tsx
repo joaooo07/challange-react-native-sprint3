@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/navigation";
+import { register } from "@/services/authService";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
@@ -11,20 +12,31 @@ export default function Register({ navigation }: Props) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = () => {
-    if (!name || !email || !password || !confirmPassword) {
-      Alert.alert("Erro", "Preencha todos os campos!");
-      return;
-    }
-    if (password !== confirmPassword) {
-      Alert.alert("Erro", "As senhas não coincidem!");
-      return;
-    }
+const handleRegister = async () => {
+  if (!name || !email || !password || !confirmPassword) {
+    Alert.alert("Erro", "Preencha todos os campos!");
+    return;
+  }
+  if (password !== confirmPassword) {
+    Alert.alert("Erro", "As senhas não coincidem!");
+    return;
+  }
 
-    // firebase API
+  try {
+      await register({
+      nome: name,      
+      email,
+      senha: password, 
+      ativo: true
+    });
     Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
     navigation.navigate("Login");
-  };
+  } catch (err) {
+    console.error(err);
+    Alert.alert("Erro", "Não foi possível cadastrar. Tente novamente.");
+  }
+};
+
 
   return (
     <View style={styles.container}>
