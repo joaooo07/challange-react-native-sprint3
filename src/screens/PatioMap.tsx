@@ -55,12 +55,20 @@ const PatioMap: React.FC<Props> = ({ route }) => {
   const isOccupied = selectedSlot?.occupied;
 
   useEffect(() => {
-    async function loadSlots() {
-      const stored = await getSlots(patioId);
-      setSlots(stored ?? patiosData[patioId] ?? []);
+  async function loadSlots() {
+    const stored = await getSlots(patioId);
+    const initialSlots = stored ?? patiosData[`p${patioId}`] ?? [];
+
+    setSlots(initialSlots);
+
+    if (initialSlots.length > 0) {
+      const randomSlot = initialSlots[Math.floor(Math.random() * initialSlots.length)];
+      setSelectedId(randomSlot.id);
     }
-    loadSlots();
-  }, [patioId]);
+  }
+  loadSlots();
+}, [patioId]);
+
 
   const handleSave = async () => {
     if (!selectedSlot) return;

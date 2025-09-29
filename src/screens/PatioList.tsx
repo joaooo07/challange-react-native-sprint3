@@ -1,32 +1,48 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation';
-import { useTranslation } from 'react-i18next';
+import { getUnits } from '@/services/unitService';
+
+type Unit = {
+  id: number;
+  codigo: string;
+  nome: string;
+  observacao: string;
+  ativa: boolean;
+};
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PatioList'>;
 
-const patios = [
-  { id: 'p1', key: 'patio_name_1' },
-  { id: 'p2', key: 'patio_name_2' },
-  { id: 'p3', key: 'patio_name_3' }
-];
-
 const PatiosList: React.FC<Props> = ({ navigation }) => {
-  const { t } = useTranslation();
+  const [patios, setPatios] = useState<Unit[]>([]);
+
+  useEffect(() => {
+    const loadUnits = async () => {
+      try {
+        const data = await getUnits();
+        setPatios(data.data ?? data);
+      } catch (err) {
+        console.error(err);
+        Alert.alert("Erro", "Não foi possível carregar os pátios (unidades).");
+      }
+    };
+
+    loadUnits();
+  }, []);
 
   return (
     <View style={styles.container}>
       <FlatList
         data={patios}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.item}
-            onPress={() => navigation.navigate('PatioMap', { patioId: item.id })}
+            onPress={() => navigation.navigate('PatioMap', { patioId: item.id.toString() })}
           >
-            <Text style={styles.itemText}>{t(item.key)}</Text>
+            <Text style={styles.itemText}>{item.nome}</Text>
           </TouchableOpacity>
         )}
       />
