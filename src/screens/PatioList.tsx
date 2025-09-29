@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '@/navigation';
 import { useTranslation } from 'react-i18next';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'PatiosList'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'PatioList'>;
 
 const patios = [
   { id: 'p1', key: 'patio_name_1' },
