@@ -49,13 +49,20 @@ const Login: React.FC = () => {
       await AsyncStorage.setItem("prefs_user_id", user.id.toString());
       await AsyncStorage.setItem("prefs_user_name", user.nome);
       await AsyncStorage.setItem("prefs_user_email", user.email);
-      await AsyncStorage.setItem("prefs_user_role", "Admin")
+      await AsyncStorage.setItem("prefs_user_role", "Admin");
       navigation.navigate("Home");
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Erro ao autenticar.");
+      if (err.response?.status === 401) {
+        alert("Email ou senha incorretos. Tente novamente.");
+      } else if (err.response?.data?.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Não foi possível autenticar. Verifique sua conexão e tente de novo.");
+      }
     }
   };
+
 
   const handleGoogle = () => {
     setModalVisible(true);
@@ -109,7 +116,7 @@ const Login: React.FC = () => {
       >
         <TextInput
           style={styles.input}
-          placeholder="E-mail -> admin@mottu.com"
+          placeholder="Digite seu E-mail: "
           placeholderTextColor="#888"
           keyboardType="email-address"
           autoCapitalize="none"
@@ -118,7 +125,7 @@ const Login: React.FC = () => {
         />
         <TextInput
           style={styles.input}
-          placeholder="Senha -> 123456"
+          placeholder="Digite sua Senha:"
           placeholderTextColor="#888"
           secureTextEntry
           value={password}

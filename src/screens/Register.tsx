@@ -18,23 +18,38 @@ export default function Register({ navigation }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const { theme } = useAppTheme();
 
+  const validateFields = () => {
+    let newErrors: { [key: string]: string } = {};
+    const emailRegex = /\S+@\S+\.\S+/;
+
+    if (!name.trim()) newErrors.name = "Nome é obrigatório";
+    else if (name.trim().length < 3)
+      newErrors.name = "Nome deve ter pelo menos 3 caracteres";
+
+    if (!email.trim()) newErrors.email = "Email é obrigatório";
+    else if (!emailRegex.test(email)) newErrors.email = "Digite um email válido";
+
+    if (password.length < 6)
+      newErrors.password = "Senha deve ter pelo menos 6 caracteres";
+
+    if (password !== confirmPassword)
+      newErrors.confirmPassword = "As senhas não coincidem";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) {
-      Alert.alert("Erro", "Preencha todos os campos!");
-      return;
-    }
-    if (password !== confirmPassword) {
-      Alert.alert("Erro", "As senhas não coincidem!");
-      return;
-    }
+    if (!validateFields()) return;
 
     try {
       await register({
         nome: name,
-        email,
+        email: email.toLowerCase(),
         senha: password,
         ativo: true,
       });
@@ -57,20 +72,32 @@ export default function Register({ navigation }: Props) {
         Criar Conta
       </Text>
 
+      {/* Nome */}
       <TextInput
         style={[
           styles.input,
-          { backgroundColor: theme.colors.card, color: theme.colors.text },
+          {
+            backgroundColor: theme.colors.card,
+            color: theme.colors.text,
+            borderColor: errors.name ? "red" : "#ccc",
+          },
         ]}
         placeholder="Nome"
         placeholderTextColor="#888"
         value={name}
         onChangeText={setName}
       />
+      {errors.name && <Text style={styles.error}>{errors.name}</Text>}
+
+      {/* Email */}
       <TextInput
         style={[
           styles.input,
-          { backgroundColor: theme.colors.card, color: theme.colors.text },
+          {
+            backgroundColor: theme.colors.card,
+            color: theme.colors.text,
+            borderColor: errors.email ? "red" : "#ccc",
+          },
         ]}
         placeholder="Email"
         placeholderTextColor="#888"
@@ -78,10 +105,17 @@ export default function Register({ navigation }: Props) {
         onChangeText={setEmail}
         keyboardType="email-address"
       />
+      {errors.email && <Text style={styles.error}>{errors.email}</Text>}
+
+      {/* Senha */}
       <TextInput
         style={[
           styles.input,
-          { backgroundColor: theme.colors.card, color: theme.colors.text },
+          {
+            backgroundColor: theme.colors.card,
+            color: theme.colors.text,
+            borderColor: errors.password ? "red" : "#ccc",
+          },
         ]}
         placeholder="Senha"
         placeholderTextColor="#888"
@@ -89,10 +123,17 @@ export default function Register({ navigation }: Props) {
         value={password}
         onChangeText={setPassword}
       />
+      {errors.password && <Text style={styles.error}>{errors.password}</Text>}
+
+      {/* Confirmar Senha */}
       <TextInput
         style={[
           styles.input,
-          { backgroundColor: theme.colors.card, color: theme.colors.text },
+          {
+            backgroundColor: theme.colors.card,
+            color: theme.colors.text,
+            borderColor: errors.confirmPassword ? "red" : "#ccc",
+          },
         ]}
         placeholder="Confirmar Senha"
         placeholderTextColor="#888"
@@ -100,6 +141,9 @@ export default function Register({ navigation }: Props) {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
       />
+      {errors.confirmPassword && (
+        <Text style={styles.error}>{errors.confirmPassword}</Text>
+      )}
 
       <TouchableOpacity
         style={[styles.button, { backgroundColor: theme.colors.primary }]}
@@ -121,9 +165,20 @@ export default function Register({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
-  input: { padding: 12, borderRadius: 6, marginBottom: 12 },
-  button: { padding: 15, borderRadius: 6, alignItems: "center" },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  input: {
+    padding: 12,
+    borderRadius: 6,
+    marginBottom: 4,
+    borderWidth: 1,
+  },
+  button: { padding: 15, borderRadius: 6, alignItems: "center", marginTop: 16 },
   buttonText: { fontWeight: "bold", fontSize: 16 },
   link: { marginTop: 16, textAlign: "center" },
+  error: { color: "red", fontSize: 12, marginBottom: 8 },
 });

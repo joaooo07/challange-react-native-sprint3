@@ -94,7 +94,7 @@ const Preferences: React.FC<Props> = ({ navigation }) => {
         style={[styles.backButton, { backgroundColor: theme.colors.notification, marginTop: 16 }]}
         onPress={handleLogout}
       >
-        <Text style={[styles.backButtonText, { color: theme.colors.text }]}>Sair</Text>
+        <Text style={[styles.backButtonText, { color: theme.colors.text }]}>Logout</Text>
       </TouchableOpacity>
     </ScrollView>
   );
