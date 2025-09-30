@@ -2,23 +2,71 @@
    **Autores:**
     - João Pedro Motta
 
-   ## Descrição
-   Aplicativo mobile em **React Native + Expo** para gerenciamento de vagas de pátio de motos, voltado para o time de administração da Mottu. Funcionalidades principais:
+   # 🚀 Challenge React Native Sprint 3
 
-   - **Home** (Admin Mottu) com acesso rápido às telas;
-   - **Listagem de Pátios**: escolha entre Pátio Principal, Secundário e Coberto;
-   - **Mapa de Vagas**: grid de vagas com status (verde = ocupada, cinza = livre);  
-   - Clicar em uma vaga abre modal para ver detalhes ou cadastrar/limpar uma moto;
-   - **Formulário de Entrada**: cadastrar rapidamente uma moto em vaga disponível;
-   - **Perfil**: exibe nome, ID, e-mail e cargo do usuário;
-   - **Persistência**: AsyncStorage mantém o estado das vagas entre sessões.
+Aplicativo desenvolvido em **React Native (Expo)** como parte do desafio da Sprint 3.  
+O projeto tem como objetivo praticar conceitos de **navegação, autenticação, integração com API externa (.NET)**, **tema claro/escuro**, gerenciamento de estado e internacionalização, além de boas práticas com React Native.
 
-   Todas as telas usam as cores da Mottu (preto de fundo e botão verde #00A859), garantindo consistência visual.
+---
 
-   --
+## 📌 Índice
+- [Tecnologias](#-tecnologias)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Instalação](#-instalação)
+- [Scripts Disponíveis](#-scripts-disponíveis)
+- [Funcionalidades](#-funcionalidades)
+- [Próximos Passos](#-próximos-passos)
+- [Licença](#-licença)
 
-   ## Tecnologias
-   - **React Native** (Expo SDK)  
-   - **TypeScript**  
-   - **React Navigation** (Native Stack Navigator)  
-   - **AsyncStorage** para persistência local  
+---
+
+## 🛠 Tecnologias
+
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
+- [React Navigation](https://reactnavigation.org/)  
+- [Axios](https://axios-http.com/) (consumo da API .NET)  
+- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)  
+- [i18next](https://www.i18next.com/) e [react-i18next](https://react.i18next.com/)  
+- [MSAL](https://github.com/AzureAD/microsoft-authentication-library-for-js) (Azure AD)  
+- [TypeScript](https://www.typescriptlang.org/)  
+
+---
+
+## 📂 Estrutura do Projeto
+
+│── .expo/ # Configurações locais do Expo
+│── assets/ # Imagens, ícones e outros assets
+│── src/ # Código fonte principal
+│ ├── components/ # Componentes reutilizáveis
+│ ├── screens/ # Telas do app (Login, Home, etc.)
+│ ├── services/ # Serviços (API .NET, Auth, etc.)
+│ └── navigation/ # Configuração das rotas
+│── App.tsx # Arquivo principal da aplicação
+│── app.json # Configuração do Expo
+│── tsconfig.json # Configuração TypeScript
+│── package.json # Dependências e scripts
+│── README.md # Documentação do projeto
+
+
+---
+
+## ⚙️ Instalação
+
+### Pré-requisitos
+- Node.js >= 18.x  
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)  
+- Backend .NET rodando (para integração com API)  
+
+### Passos
+```bash
+# Clone este repositório
+git clone https://github.com/joaooo07/challange-react-native-sprint3.git
+
+# Acesse a pasta
+cd challange-react-native-sprint3/challenge-3-joaooo07
+
+# Instale as dependências
+npm install
+# ou
+yarn install
