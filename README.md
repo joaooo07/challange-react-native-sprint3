@@ -31,9 +31,9 @@ O projeto tem como objetivo praticar conceitos de **navegação, autenticação,
 - [MSAL](https://github.com/AzureAD/microsoft-authentication-library-for-js) (Azure AD)  
 - [TypeScript](https://www.typescriptlang.org/)  
 
----
-
 ## 📂 Estrutura do Projeto
+
+```bash
 challenge-3-joaooo07
 ├── .expo/               # Configurações locais do Expo
 ├── assets/              # Imagens, ícones e outros assets
@@ -48,7 +48,6 @@ challenge-3-joaooo07
 ├── package.json         # Dependências e scripts
 └── README.md            # Documentação do projeto
 
----
 
 ## ⚙️ Instalação
 
