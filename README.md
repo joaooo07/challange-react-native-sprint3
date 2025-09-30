@@ -34,20 +34,19 @@ O projeto tem como objetivo praticar conceitos de **navegação, autenticação,
 ---
 
 ## 📂 Estrutura do Projeto
-
-│── .expo/ # Configurações locais do Expo
-│── assets/ # Imagens, ícones e outros assets
-│── src/ # Código fonte principal
-│ ├── components/ # Componentes reutilizáveis
-│ ├── screens/ # Telas do app (Login, Home, etc.)
-│ ├── services/ # Serviços (API .NET, Auth, etc.)
-│ └── navigation/ # Configuração das rotas
-│── App.tsx # Arquivo principal da aplicação
-│── app.json # Configuração do Expo
-│── tsconfig.json # Configuração TypeScript
-│── package.json # Dependências e scripts
-│── README.md # Documentação do projeto
-
+challenge-3-joaooo07
+├── .expo/               # Configurações locais do Expo
+├── assets/              # Imagens, ícones e outros assets
+├── src/                 # Código fonte principal
+│   ├── components/      # Componentes reutilizáveis
+│   ├── screens/         # Telas do app (Login, Home, etc.)
+│   ├── services/        # Serviços (API .NET, Auth, etc.)
+│   └── navigation/      # Configuração das rotas
+├── App.tsx              # Arquivo principal da aplicação
+├── app.json             # Configuração do Expo
+├── tsconfig.json        # Configuração TypeScript
+├── package.json         # Dependências e scripts
+└── README.md            # Documentação do projeto
 
 ---
 
