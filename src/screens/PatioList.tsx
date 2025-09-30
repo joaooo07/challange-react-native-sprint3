@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/navigation';
+import { RootStackParamList, useAppTheme } from '@/navigation';
 import { getUnits } from '@/services/unitService';
 
 type Unit = {
@@ -16,6 +16,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PatioList'>;
 
 const PatiosList: React.FC<Props> = ({ navigation }) => {
   const [patios, setPatios] = useState<Unit[]>([]);
+  const { theme } = useAppTheme();
 
   useEffect(() => {
     const loadUnits = async () => {
@@ -32,17 +33,17 @@ const PatiosList: React.FC<Props> = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <FlatList
         data={patios}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.item}
+            style={[styles.item, { backgroundColor: theme.colors.card }]}
             onPress={() => navigation.navigate('PatioMap', { patioId: item.id.toString() })}
           >
-            <Text style={styles.itemText}>{item.nome}</Text>
+            <Text style={[styles.itemText, { color: theme.colors.text }]}>{item.nome}</Text>
           </TouchableOpacity>
         )}
       />
@@ -53,22 +54,19 @@ const PatiosList: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    padding: 16
+    padding: 16,
   },
   listContent: {
-    paddingBottom: 16
+    paddingBottom: 16,
   },
   item: {
-    backgroundColor: '#222',
     padding: 16,
     borderRadius: 6,
-    marginBottom: 12
+    marginBottom: 12,
   },
   itemText: {
-    color: '#FFF',
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });
 
 export default PatiosList;

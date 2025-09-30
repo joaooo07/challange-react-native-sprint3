@@ -14,6 +14,7 @@ import {
   updateUser,
   deleteUser,
 } from "@/services/userService";
+import { useAppTheme } from "@/navigation";
 
 export default function Users() {
   const [users, setUsers] = useState<any[]>([]);
@@ -21,6 +22,8 @@ export default function Users() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
+
+  const { theme } = useAppTheme();
 
   const loadUsers = async () => {
     try {
@@ -80,31 +83,50 @@ export default function Users() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Gerenciar Usuários</Text>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <Text style={[styles.title, { color: theme.colors.text }]}>
+        Gerenciar Usuários
+      </Text>
 
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: theme.colors.card, color: theme.colors.text },
+        ]}
         placeholder="Nome"
+        placeholderTextColor="#888"
         value={nome}
         onChangeText={setNome}
       />
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: theme.colors.card, color: theme.colors.text },
+        ]}
         placeholder="E-mail"
+        placeholderTextColor="#888"
         value={email}
         onChangeText={setEmail}
       />
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          { backgroundColor: theme.colors.card, color: theme.colors.text },
+        ]}
         placeholder="Senha"
+        placeholderTextColor="#888"
         secureTextEntry
         value={senha}
         onChangeText={setSenha}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSave}>
-        <Text style={styles.buttonText}>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: theme.colors.primary }]}
+        onPress={handleSave}
+      >
+        <Text style={[styles.buttonText, { color: theme.colors.text }]}>
           {editingUserId ? "Atualizar" : "Cadastrar"}
         </Text>
       </TouchableOpacity>
@@ -113,16 +135,20 @@ export default function Users() {
         data={users}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.userRow}>
-            <Text style={styles.userText}>
+          <View
+            style={[styles.userRow, { backgroundColor: theme.colors.card }]}
+          >
+            <Text style={[styles.userText, { color: theme.colors.text }]}>
               {item.nome} ({item.email})
             </Text>
             <View style={styles.actions}>
               <TouchableOpacity onPress={() => handleEdit(item)}>
-                <Text style={styles.edit}>Editar</Text>
+                <Text style={[styles.edit, { color: "#FFD700" }]}>Editar</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                <Text style={styles.delete}>Excluir</Text>
+                <Text style={[styles.delete, { color: theme.colors.notification }]}>
+                  Excluir
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -133,33 +159,25 @@ export default function Users() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#000", padding: 16 },
-  title: { color: "#FFF", fontSize: 22, fontWeight: "bold", marginBottom: 16 },
-  input: {
-    backgroundColor: "#222",
-    color: "#FFF",
-    padding: 12,
-    borderRadius: 6,
-    marginBottom: 10,
-  },
+  container: { flex: 1, padding: 16 },
+  title: { fontSize: 22, fontWeight: "bold", marginBottom: 16 },
+  input: { padding: 12, borderRadius: 6, marginBottom: 10 },
   button: {
-    backgroundColor: "#00A859",
     padding: 14,
     borderRadius: 6,
     alignItems: "center",
     marginBottom: 20,
   },
-  buttonText: { color: "#FFF", fontSize: 16, fontWeight: "bold" },
+  buttonText: { fontSize: 16, fontWeight: "bold" },
   userRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 12,
-    backgroundColor: "#111",
     padding: 12,
     borderRadius: 6,
   },
-  userText: { color: "#FFF" },
+  userText: {},
   actions: { flexDirection: "row", gap: 12 },
-  edit: { color: "#FFD700", marginRight: 12 },
-  delete: { color: "#FF6347" },
+  edit: { marginRight: 12 },
+  delete: {},
 });

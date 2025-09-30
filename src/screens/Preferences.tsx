@@ -5,11 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/navigation';
+import { RootStackParamList, useAppTheme } from '@/navigation';
 import { useTranslation } from 'react-i18next';
 
 const USER_NAME_KEY = 'prefs_user_name';
@@ -25,18 +25,19 @@ const Preferences: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
   const [role, setRole] = useState<string>('Admin');
 
-  const { t, i18n } = useTranslation(); 
+  const { t, i18n } = useTranslation();
+  const { theme } = useAppTheme();
 
   useEffect(() => {
     (async () => {
       const name = await AsyncStorage.getItem(USER_NAME_KEY);
-      const id   = await AsyncStorage.getItem(USER_ID_KEY);
+      const id = await AsyncStorage.getItem(USER_ID_KEY);
       const mail = await AsyncStorage.getItem(USER_EMAIL_KEY);
-      const rl   = await AsyncStorage.getItem(USER_ROLE_KEY);
+      const rl = await AsyncStorage.getItem(USER_ROLE_KEY);
       if (name) setUserName(name);
-      if (id)   setUserId(id);
+      if (id) setUserId(id);
       if (mail) setEmail(mail);
-      if (rl)   setRole(rl);
+      if (rl) setRole(rl);
     })();
   }, []);
 
@@ -46,54 +47,54 @@ const Preferences: React.FC<Props> = ({ navigation }) => {
         USER_NAME_KEY,
         USER_ID_KEY,
         USER_EMAIL_KEY,
-        USER_ROLE_KEY
+        USER_ROLE_KEY,
       ]);
       navigation.reset({
         index: 0,
-        routes: [{ name: "Login" }], 
+        routes: [{ name: 'Login' }],
       });
     } catch (err) {
-      Alert.alert("Erro", "Não foi possível realizar o logout.");
+      Alert.alert('Erro', 'Não foi possível realizar o logout.');
     }
   };
 
   if (!i18n.isInitialized) {
-    return <Text style={{ color: 'white' }}>Carregando idioma...</Text>;
+    return <Text style={{ color: theme.colors.text }}>Carregando idioma...</Text>;
   }
 
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.header}>{t('user_profile')}</Text>
+      <Text style={[styles.header, { color: theme.colors.text }]}>{t('user_profile')}</Text>
 
-      <View style={styles.profileContainer}>
-        <Text style={styles.profileLabel}>{t('name')}:</Text>
-        <Text style={styles.profileValue}>{userName}</Text>
+      <View style={[styles.profileContainer, { backgroundColor: theme.colors.card }]}>
+        <Text style={[styles.profileLabel, { color: theme.colors.border }]}>{t('name')}:</Text>
+        <Text style={[styles.profileValue, { color: theme.colors.text }]}>{userName}</Text>
 
-        <Text style={styles.profileLabel}>{t('id')}:</Text>
-        <Text style={styles.profileValue}>{userId}</Text>
+        <Text style={[styles.profileLabel, { color: theme.colors.border }]}>{t('id')}:</Text>
+        <Text style={[styles.profileValue, { color: theme.colors.text }]}>{userId}</Text>
 
-        <Text style={styles.profileLabel}>E-mail:</Text>
-        <Text style={styles.profileValue}>{email}</Text>
+        <Text style={[styles.profileLabel, { color: theme.colors.border }]}>E-mail:</Text>
+        <Text style={[styles.profileValue, { color: theme.colors.text }]}>{email}</Text>
 
-        <Text style={styles.profileLabel}>{t('role')}:</Text>
-        <Text style={styles.profileValue}>{role}</Text>
+        <Text style={[styles.profileLabel, { color: theme.colors.border }]}>{t('role')}:</Text>
+        <Text style={[styles.profileValue, { color: theme.colors.text }]}>{role}</Text>
       </View>
 
       <TouchableOpacity
-        style={styles.backButton}
+        style={[styles.backButton, { backgroundColor: theme.colors.primary }]}
         onPress={() => navigation.goBack()}
       >
-        <Text style={styles.backButtonText}>{t('back')}</Text>
+        <Text style={[styles.backButtonText, { color: theme.colors.text }]}>{t('back')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.backButton, { backgroundColor: "red", marginTop: 16 }]}
+        style={[styles.backButton, { backgroundColor: theme.colors.notification, marginTop: 16 }]}
         onPress={handleLogout}
       >
-        <Text style={styles.backButtonText}>Sair</Text>
+        <Text style={[styles.backButtonText, { color: theme.colors.text }]}>Sair</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -102,43 +103,36 @@ const Preferences: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#000',
-    padding: 16
+    padding: 16,
   },
   header: {
-    color: '#FFF',
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginBottom: 24,
   },
   profileContainer: {
-    backgroundColor: '#222',
     padding: 16,
     borderRadius: 8,
-    marginBottom: 24
+    marginBottom: 24,
   },
   profileLabel: {
-    color: '#AAA',
     fontSize: 14,
-    marginTop: 12
+    marginTop: 12,
   },
   profileValue: {
-    color: '#FFF',
     fontSize: 18,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   backButton: {
     marginTop: 'auto',
-    backgroundColor: '#00A859',
     paddingVertical: 14,
     borderRadius: 6,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   backButtonText: {
-    color: '#FFF',
     fontSize: 16,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });
 
 export default Preferences;

@@ -8,12 +8,12 @@ import {
   Pressable,
   SafeAreaView,
   TextInput,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/navigation';
+import { RootStackParamList, useAppTheme } from '@/navigation';
 import { getSlots, saveSlots, Slot as SlotType } from '../storage/storage';
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
 
 const patiosData: Record<string, SlotType[]> = {
   p1: [
@@ -41,7 +41,6 @@ const patiosData: Record<string, SlotType[]> = {
     { id: 'I2', occupied: true, brand: 'KTM', plate: 'KTM-1111', color: 'Laranja', model: 'Duke 390' }
   ]
 };
-
 type Props = NativeStackScreenProps<RootStackParamList, 'PatioMap'>;
 
 const PatioMap: React.FC<Props> = ({ route }) => {
@@ -50,29 +49,28 @@ const PatioMap: React.FC<Props> = ({ route }) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [form, setForm] = useState({ brand: '', plate: '', color: '', model: '' });
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
 
-  const selectedSlot = slots.find(slot => slot.id === selectedId);
+  const selectedSlot = slots.find((slot) => slot.id === selectedId);
   const isOccupied = selectedSlot?.occupied;
 
   useEffect(() => {
-  async function loadSlots() {
-    const stored = await getSlots(patioId);
-    const initialSlots = stored ?? patiosData[`p${patioId}`] ?? [];
+    async function loadSlots() {
+      const stored = await getSlots(patioId);
+      const initialSlots = stored ?? patiosData[`p${patioId}`] ?? [];
+      setSlots(initialSlots);
 
-    setSlots(initialSlots);
-
-    if (initialSlots.length > 0) {
-      const randomSlot = initialSlots[Math.floor(Math.random() * initialSlots.length)];
-      setSelectedId(randomSlot.id);
+      if (initialSlots.length > 0) {
+        const randomSlot = initialSlots[Math.floor(Math.random() * initialSlots.length)];
+        setSelectedId(randomSlot.id);
+      }
     }
-  }
-  loadSlots();
-}, [patioId]);
-
+    loadSlots();
+  }, [patioId]);
 
   const handleSave = async () => {
     if (!selectedSlot) return;
-    const updated = slots.map(s =>
+    const updated = slots.map((s) =>
       s.id === selectedSlot.id ? { ...s, occupied: true, ...form } : s
     );
     setSlots(updated);
@@ -83,7 +81,7 @@ const PatioMap: React.FC<Props> = ({ route }) => {
 
   const handleVacate = async () => {
     if (!selectedSlot) return;
-    const cleared = slots.map(s =>
+    const cleared = slots.map((s) =>
       s.id === selectedSlot.id ? { id: s.id, occupied: false } : s
     );
     setSlots(cleared);
@@ -92,25 +90,30 @@ const PatioMap: React.FC<Props> = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.legendContainer}>
-        <View style={[styles.legendItem, { backgroundColor: '#00A859' }]} />
-        <Text style={styles.legendText}>{t('occupied')}</Text>
-        <View style={[styles.legendItem, { backgroundColor: '#444' }]} />
-        <Text style={styles.legendText}>{t('free')}</Text>
+        <View style={[styles.legendItem, { backgroundColor: theme.colors.primary }]} />
+        <Text style={[styles.legendText, { color: theme.colors.text }]}>{t('occupied')}</Text>
+        <View style={[styles.legendItem, { backgroundColor: theme.colors.card }]} />
+        <Text style={[styles.legendText, { color: theme.colors.text }]}>{t('free')}</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator>
-        {slots.map(slot => {
+        {slots.map((slot) => {
           const isSelected = selectedId === slot.id;
-          const bgColor = isSelected ? '#FF4D4D' : slot.occupied ? '#00A859' : '#444';
+          const bgColor = isSelected
+            ? '#FF4D4D'
+            : slot.occupied
+            ? theme.colors.primary
+            : theme.colors.card;
+
           return (
             <TouchableOpacity
               key={slot.id}
-              style={[styles.slot, { backgroundColor: bgColor }]} 
+              style={[styles.slot, { backgroundColor: bgColor }]}
               onPress={() => setSelectedId(slot.id)}
             >
-              <Text style={styles.slotText}>{slot.id}</Text>
+              <Text style={[styles.slotText, { color: theme.colors.text }]}>{slot.id}</Text>
             </TouchableOpacity>
           );
         })}
@@ -119,64 +122,74 @@ const PatioMap: React.FC<Props> = ({ route }) => {
       {selectedSlot && (
         <Modal visible transparent animationType="fade" onRequestClose={() => setSelectedId(null)}>
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
+            <View style={[styles.modalContent, { backgroundColor: theme.colors.card }]}>
               <ScrollView>
-                <Text style={styles.modalTitle}>{t('spot')} {selectedSlot.id}</Text>
+                <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
+                  {t('spot')} {selectedSlot.id}
+                </Text>
+
                 {isOccupied ? (
                   <>
-                    <Text style={styles.modalLabel}>
+                    <Text style={[styles.modalLabel, { color: theme.colors.text }]}>
                       {t('brand')}: <Text style={styles.modalValue}>{selectedSlot.brand}</Text>
                     </Text>
-                    <Text style={styles.modalLabel}>
+                    <Text style={[styles.modalLabel, { color: theme.colors.text }]}>
                       {t('plate')}: <Text style={styles.modalValue}>{selectedSlot.plate}</Text>
                     </Text>
-                    <Text style={styles.modalLabel}>
+                    <Text style={[styles.modalLabel, { color: theme.colors.text }]}>
                       {t('color')}: <Text style={styles.modalValue}>{selectedSlot.color}</Text>
                     </Text>
-                    <Text style={styles.modalLabel}>
+                    <Text style={[styles.modalLabel, { color: theme.colors.text }]}>
                       {t('model')}: <Text style={styles.modalValue}>{selectedSlot.model}</Text>
                     </Text>
-                    <Pressable style={styles.vacateButton} onPress={handleVacate}>
+
+                    <Pressable style={[styles.vacateButton]} onPress={handleVacate}>
                       <Text style={styles.vacateButtonText}>{t('vacate_spot')}</Text>
                     </Pressable>
                   </>
                 ) : (
                   <>
-                    <Text style={styles.formLabel}>{t('brand')}:</Text>
+                    <Text style={[styles.formLabel, { color: theme.colors.text }]}>{t('brand')}:</Text>
                     <TextInput
-                      style={styles.input}
+                      style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.border }]}
                       placeholder="e.g. Honda"
+                      placeholderTextColor="#888"
                       value={form.brand}
-                      onChangeText={text => setForm({ ...form, brand: text })}
+                      onChangeText={(text) => setForm({ ...form, brand: text })}
                     />
-                    <Text style={styles.formLabel}>{t('plate')}:</Text>
+                    <Text style={[styles.formLabel, { color: theme.colors.text }]}>{t('plate')}:</Text>
                     <TextInput
-                      style={styles.input}
+                      style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.border }]}
                       placeholder="ABC-1234"
+                      placeholderTextColor="#888"
                       value={form.plate}
-                      onChangeText={text => setForm({ ...form, plate: text })}
+                      onChangeText={(text) => setForm({ ...form, plate: text })}
                     />
-                    <Text style={styles.formLabel}>{t('color')}:</Text>
+                    <Text style={[styles.formLabel, { color: theme.colors.text }]}>{t('color')}:</Text>
                     <TextInput
-                      style={styles.input}
+                      style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.border }]}
                       placeholder="e.g. Vermelho"
+                      placeholderTextColor="#888"
                       value={form.color}
-                      onChangeText={text => setForm({ ...form, color: text })}
+                      onChangeText={(text) => setForm({ ...form, color: text })}
                     />
-                    <Text style={styles.formLabel}>{t('model')}:</Text>
+                    <Text style={[styles.formLabel, { color: theme.colors.text }]}>{t('model')}:</Text>
                     <TextInput
-                      style={styles.input}
+                      style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.border }]}
                       placeholder="e.g. CG 160"
+                      placeholderTextColor="#888"
                       value={form.model}
-                      onChangeText={text => setForm({ ...form, model: text })}
+                      onChangeText={(text) => setForm({ ...form, model: text })}
                     />
-                    <Pressable style={styles.saveButton} onPress={handleSave}>
-                      <Text style={styles.saveButtonText}>{t('save')}</Text>
+
+                    <Pressable style={[styles.saveButton, { backgroundColor: theme.colors.primary }]} onPress={handleSave}>
+                      <Text style={[styles.saveButtonText, { color: theme.colors.text }]}>{t('save')}</Text>
                     </Pressable>
                   </>
                 )}
-                <Pressable style={styles.closeButton} onPress={() => setSelectedId(null)}>
-                  <Text style={styles.closeButtonText}>{t('close')}</Text>
+
+                <Pressable style={[styles.closeButton, { backgroundColor: theme.colors.border }]} onPress={() => setSelectedId(null)}>
+                  <Text style={[styles.closeButtonText, { color: theme.colors.text }]}>{t('close')}</Text>
                 </Pressable>
               </ScrollView>
             </View>
@@ -188,26 +201,26 @@ const PatioMap: React.FC<Props> = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', padding: 10 },
+  container: { flex: 1, padding: 10 },
   legendContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
   legendItem: { width: 16, height: 16, borderRadius: 4, marginHorizontal: 4 },
-  legendText: { color: '#FFF', fontSize: 14, marginHorizontal: 8 },
+  legendText: { fontSize: 14, marginHorizontal: 8 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start' },
   slot: { width: '30%', aspectRatio: 1, margin: '1.66%', borderRadius: 6, justifyContent: 'center', alignItems: 'center' },
-  slotText: { color: '#FFF', fontWeight: 'bold' },
+  slotText: { fontWeight: 'bold' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
-  modalContent: { width: '80%', backgroundColor: '#FFF', borderRadius: 8, padding: 20, maxHeight: '80%' },
+  modalContent: { width: '80%', borderRadius: 8, padding: 20, maxHeight: '80%' },
   modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 12 },
   modalLabel: { fontSize: 14, marginVertical: 4 },
   modalValue: { fontWeight: '600' },
   formLabel: { fontSize: 14, marginTop: 8 },
-  input: { borderWidth: 1, borderColor: '#CCC', borderRadius: 6, padding: 8, marginTop: 4 },
-  saveButton: { marginTop: 16, backgroundColor: '#00A859', paddingVertical: 12, borderRadius: 6, alignItems: 'center' },
-  saveButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
+  input: { borderWidth: 1, borderRadius: 6, padding: 8, marginTop: 4 },
+  saveButton: { marginTop: 16, paddingVertical: 12, borderRadius: 6, alignItems: 'center' },
+  saveButtonText: { fontSize: 16, fontWeight: 'bold' },
   vacateButton: { marginTop: 12, backgroundColor: '#FF4D4D', paddingVertical: 10, borderRadius: 6, alignItems: 'center' },
   vacateButtonText: { color: '#FFF', fontSize: 14, fontWeight: '600' },
-  closeButton: { marginTop: 8, backgroundColor: '#666', paddingVertical: 10, borderRadius: 6, alignItems: 'center' },
-  closeButtonText: { color: '#FFF', fontSize: 14, fontWeight: '600' }
+  closeButton: { marginTop: 8, paddingVertical: 10, borderRadius: 6, alignItems: 'center' },
+  closeButtonText: { fontSize: 14, fontWeight: '600' },
 });
 
 export default PatioMap;
