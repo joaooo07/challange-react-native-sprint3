@@ -1,20 +1,33 @@
 import axios from "axios";
 
-
 const api = axios.create({
-  //baseURL: "http://10.0.2.2:5263/api", // em Android emulator
-  baseURL: "http://localhost:5263/api", // se rodar no iOS ou web
+  baseURL: "http://localhost:5263/api",
 });
 
-let authToken: string | null = null;
+let authToken: string | null = localStorage.getItem("accessToken");
 
 export const setAuthToken = (token: string | null) => {
   authToken = token;
+  if (token) localStorage.setItem("accessToken", token);
+  else localStorage.removeItem("accessToken");
 };
 
+
 api.interceptors.request.use((config) => {
-  if (authToken) {
-    config.headers.Authorization = `Bearer ${authToken}`;
+  const token = authToken || localStorage.getItem("accessToken");
+  if (token) {
+
+    const finalToken = token.startsWith("Bearer ")
+      ? token
+      : `Bearer ${token}`;
+
+    if (config.headers?.set) {
+      config.headers.set("Authorization", finalToken);
+    } else if (config.headers) {
+      (config.headers as any)["Authorization"] = finalToken;
+    } else {
+      (config as any).headers = { Authorization: finalToken };
+    }
   }
   return config;
 });

@@ -43,25 +43,30 @@ const Login: React.FC = () => {
   }, []);
 
   const handleLogin = async () => {
-    try {
-      const user = await login({ email, senha: password });
-      console.log("Usuário autenticado:", user);
-      await AsyncStorage.setItem("prefs_user_id", user.id.toString());
-      await AsyncStorage.setItem("prefs_user_name", user.nome);
-      await AsyncStorage.setItem("prefs_user_email", user.email);
-      await AsyncStorage.setItem("prefs_user_role", "Admin");
-      navigation.navigate("Home");
-    } catch (err: any) {
-      console.error(err);
-      if (err.response?.status === 401) {
-        alert("Email ou senha incorretos. Tente novamente.");
-      } else if (err.response?.data?.message) {
-        alert(err.response.data.message);
-      } else {
-        alert("Não foi possível autenticar. Verifique sua conexão e tente de novo.");
-      }
+  try {
+    const result = await login({ email, senha: password });
+    const user = result.usuario;
+
+    await AsyncStorage.setItem("prefs_user_id", user.id.toString());
+    await AsyncStorage.setItem("prefs_user_name", user.nome);
+    await AsyncStorage.setItem("prefs_user_email", user.email);
+    await AsyncStorage.setItem("prefs_user_role", "Admin");
+
+    await AsyncStorage.setItem("prefs_token", result.token);
+
+    navigation.navigate("Home");
+  } catch (err: any) {
+    console.error(err);
+    if (err.response?.status === 401) {
+      alert("Email ou senha incorretos. Tente novamente.");
+    } else if (err.response?.data?.message) {
+      alert(err.response.data.message);
+    } else {
+      alert("Não foi possível autenticar. Verifique sua conexão e tente de novo.");
     }
-  };
+  }
+};
+
 
 
   const handleGoogle = () => {
