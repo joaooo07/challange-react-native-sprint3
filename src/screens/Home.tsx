@@ -21,7 +21,7 @@ const Home: React.FC = () => {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Text style={{ color: theme.colors.text, marginBottom: 20 }}>
-        Idioma atual: {i18n.language}
+        {t('current_language')}: {i18n.language}
       </Text>
 
       <TouchableOpacity
@@ -47,7 +47,7 @@ const Home: React.FC = () => {
         onPress={() => navigation.navigate('Users')}
       >
         <Text style={[styles.buttonText, { color: theme.colors.text }]}>
-          Gerenciar Usuários
+          {t('manage_users')}
         </Text>
       </TouchableOpacity>
 
@@ -56,7 +56,7 @@ const Home: React.FC = () => {
         onPress={() => navigation.navigate("Units")}
       >
         <Text style={[styles.buttonText, { color: theme.colors.text }]}>
-          Gerenciar Patios
+          {t('manage_yards')}
         </Text>
       </TouchableOpacity>
 

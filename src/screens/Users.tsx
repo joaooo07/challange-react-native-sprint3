@@ -15,6 +15,7 @@ import {
   deleteUser,
 } from "@/services/userService";
 import { useAppTheme } from "@/navigation";
+import { useTranslation } from "react-i18next";
 
 export default function Users() {
   const [users, setUsers] = useState<any[]>([]);
@@ -24,6 +25,7 @@ export default function Users() {
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
   const { theme } = useAppTheme();
+  const { t } = useTranslation();
 
   const loadUsers = async () => {
     try {
@@ -31,27 +33,27 @@ export default function Users() {
       setUsers(data);
     } catch (err) {
       console.error(err);
-      Alert.alert("Erro", "Não foi possível carregar os usuários.");
+      Alert.alert(t("error"), t("error_loading_users"));
     }
   };
 
   useEffect(() => {
     loadUsers();
-  }, []);
+  }, [t]);
 
   const handleSave = async () => {
     if (!nome || !email || !senha) {
-      Alert.alert("Erro", "Preencha todos os campos");
+      Alert.alert(t("error"), t("fill_all_fields"));
       return;
     }
 
     try {
       if (editingUserId) {
         await updateUser(editingUserId, { nome, email, senha, ativo: true });
-        Alert.alert("Sucesso", "Usuário atualizado!");
+        Alert.alert(t("success"), t("user_updated"));
       } else {
         await createUser({ nome, email, senha, ativo: true });
-        Alert.alert("Sucesso", "Usuário criado!");
+        Alert.alert(t("success"), t("user_created"));
       }
       setNome("");
       setEmail("");
@@ -60,7 +62,7 @@ export default function Users() {
       loadUsers();
     } catch (err) {
       console.error(err);
-      Alert.alert("Erro", "Não foi possível salvar o usuário.");
+      Alert.alert(t("error"), t("error_saving_user"));
     }
   };
 
@@ -74,20 +76,18 @@ export default function Users() {
   const handleDelete = async (id: number) => {
     try {
       await deleteUser(id);
-      Alert.alert("Sucesso", "Usuário deletado!");
+      Alert.alert(t("success"), t("user_deleted"));
       loadUsers();
     } catch (err) {
       console.error(err);
-      Alert.alert("Erro", "Não foi possível deletar o usuário.");
+      Alert.alert(t("error"), t("error_deleting_user"));
     }
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Text style={[styles.title, { color: theme.colors.text }]}>
-        Gerenciar Usuários
+        {t("manage_users")}
       </Text>
 
       <TextInput
@@ -95,7 +95,7 @@ export default function Users() {
           styles.input,
           { backgroundColor: theme.colors.card, color: theme.colors.text },
         ]}
-        placeholder="Nome"
+        placeholder={t("name")}
         placeholderTextColor="#888"
         value={nome}
         onChangeText={setNome}
@@ -105,7 +105,7 @@ export default function Users() {
           styles.input,
           { backgroundColor: theme.colors.card, color: theme.colors.text },
         ]}
-        placeholder="E-mail"
+        placeholder={t("email")}
         placeholderTextColor="#888"
         value={email}
         onChangeText={setEmail}
@@ -115,7 +115,7 @@ export default function Users() {
           styles.input,
           { backgroundColor: theme.colors.card, color: theme.colors.text },
         ]}
-        placeholder="Senha"
+        placeholder={t("password")}
         placeholderTextColor="#888"
         secureTextEntry
         value={senha}
@@ -127,7 +127,7 @@ export default function Users() {
         onPress={handleSave}
       >
         <Text style={[styles.buttonText, { color: theme.colors.text }]}>
-          {editingUserId ? "Atualizar" : "Cadastrar"}
+          {editingUserId ? t("update") : t("register")}
         </Text>
       </TouchableOpacity>
 
@@ -135,19 +135,17 @@ export default function Users() {
         data={users}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View
-            style={[styles.userRow, { backgroundColor: theme.colors.card }]}
-          >
+          <View style={[styles.userRow, { backgroundColor: theme.colors.card }]}>
             <Text style={[styles.userText, { color: theme.colors.text }]}>
               {item.nome} ({item.email})
             </Text>
             <View style={styles.actions}>
               <TouchableOpacity onPress={() => handleEdit(item)}>
-                <Text style={[styles.edit, { color: "#FFD700" }]}>Editar</Text>
+                <Text style={[styles.edit, { color: "#FFD700" }]}>{t("edit")}</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleDelete(item.id)}>
                 <Text style={[styles.delete, { color: theme.colors.notification }]}>
-                  Excluir
+                  {t("delete")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -162,12 +160,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   title: { fontSize: 22, fontWeight: "bold", marginBottom: 16 },
   input: { padding: 12, borderRadius: 6, marginBottom: 10 },
-  button: {
-    padding: 14,
-    borderRadius: 6,
-    alignItems: "center",
-    marginBottom: 20,
-  },
+  button: { padding: 14, borderRadius: 6, alignItems: "center", marginBottom: 20 },
   buttonText: { fontSize: 16, fontWeight: "bold" },
   userRow: {
     flexDirection: "row",

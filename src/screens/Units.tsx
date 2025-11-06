@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { getUnits, createUnit, deleteUnit, updateUnit } from "@/services/unitService";
 import { useAppTheme } from "@/navigation";
+import { useTranslation } from "react-i18next";
 
 type Unit = {
   id: number;
@@ -28,6 +29,7 @@ const Units: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const { theme } = useAppTheme();
+  const { t } = useTranslation();
 
   const loadUnits = async () => {
     try {
@@ -35,27 +37,27 @@ const Units: React.FC = () => {
       setUnits(data.data);
     } catch (err) {
       console.error(err);
-      Alert.alert("Erro", "Não foi possível carregar as unidades.");
+      Alert.alert(t("error"), t("error_loading_units"));
     }
   };
 
   const handleSave = async () => {
     if (!codigo || !nome) {
-      Alert.alert("Erro", "Preencha código e nome!");
+      Alert.alert(t("error"), t("fill_code_name"));
       return;
     }
     try {
       if (editingId) {
         await updateUnit(editingId, { codigo, nome, observacao, ativa });
-        Alert.alert("Sucesso", "Unidade atualizada!");
+        Alert.alert(t("success"), t("unit_updated"));
       } else {
         await createUnit({ codigo, nome, observacao, ativa });
-        Alert.alert("Sucesso", "Unidade criada!");
+        Alert.alert(t("success"), t("unit_created"));
       }
       resetForm();
       loadUnits();
     } catch (err) {
-      Alert.alert("Erro", "Não foi possível salvar a unidade.");
+      Alert.alert(t("error"), t("error_saving_unit"));
     }
   };
 
@@ -64,7 +66,7 @@ const Units: React.FC = () => {
       await deleteUnit(id);
       loadUnits();
     } catch (err) {
-      Alert.alert("Erro", "Não foi possível deletar.");
+      Alert.alert(t("error"), t("error_deleting_unit"));
     }
   };
 
@@ -86,11 +88,11 @@ const Units: React.FC = () => {
 
   useEffect(() => {
     loadUnits();
-  }, []);
+  }, [t]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>Unidades</Text>
+      <Text style={[styles.title, { color: theme.colors.text }]}>{t("units")}</Text>
 
       <FlatList
         data={units}
@@ -98,20 +100,20 @@ const Units: React.FC = () => {
         renderItem={({ item }) => (
           <View style={[styles.unitItem, { backgroundColor: theme.colors.card }]}>
             <Text style={[styles.unitText, { color: theme.colors.text }]}>
-              {item.codigo} - {item.nome} ({item.ativa ? "Ativa" : "Inativa"})
+              {item.codigo} - {item.nome} ({item.ativa ? t("active") : t("inactive")})
             </Text>
             <View style={{ flexDirection: "row", gap: 8 }}>
               <TouchableOpacity
                 onPress={() => handleEdit(item)}
                 style={[styles.editButton, { backgroundColor: "orange" }]}
               >
-                <Text style={styles.editText}>Editar</Text>
+                <Text style={styles.editText}>{t("edit")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => handleDelete(item.id)}
                 style={[styles.deleteButton, { backgroundColor: theme.colors.notification }]}
               >
-                <Text style={styles.deleteText}>Excluir</Text>
+                <Text style={styles.deleteText}>{t("delete")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -119,42 +121,30 @@ const Units: React.FC = () => {
       />
 
       <TextInput
-        style={[
-          styles.input,
-          { backgroundColor: theme.colors.card, color: theme.colors.text, borderColor: theme.colors.border },
-        ]}
-        placeholder="Código"
+        style={[styles.input, { backgroundColor: theme.colors.card, color: theme.colors.text, borderColor: theme.colors.border }]}
+        placeholder={t("code")}
         placeholderTextColor="#888"
         value={codigo}
         onChangeText={setCodigo}
       />
       <TextInput
-        style={[
-          styles.input,
-          { backgroundColor: theme.colors.card, color: theme.colors.text, borderColor: theme.colors.border },
-        ]}
-        placeholder="Nome"
+        style={[styles.input, { backgroundColor: theme.colors.card, color: theme.colors.text, borderColor: theme.colors.border }]}
+        placeholder={t("name")}
         placeholderTextColor="#888"
         value={nome}
         onChangeText={setNome}
       />
       <TextInput
-        style={[
-          styles.input,
-          { backgroundColor: theme.colors.card, color: theme.colors.text, borderColor: theme.colors.border },
-        ]}
-        placeholder="Observação"
+        style={[styles.input, { backgroundColor: theme.colors.card, color: theme.colors.text, borderColor: theme.colors.border }]}
+        placeholder={t("note")}
         placeholderTextColor="#888"
         value={observacao}
         onChangeText={setObservacao}
       />
 
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: theme.colors.primary }]}
-        onPress={handleSave}
-      >
+      <TouchableOpacity style={[styles.button, { backgroundColor: theme.colors.primary }]} onPress={handleSave}>
         <Text style={[styles.buttonText, { color: theme.colors.text }]}>
-          {editingId ? "Atualizar Unidade" : "Adicionar Unidade"}
+          {editingId ? t("update_unit") : t("add_unit")}
         </Text>
       </TouchableOpacity>
     </View>
@@ -175,7 +165,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 6,
   },
-  unitText: {},
+  unitText: { fontSize: 16 },
   editButton: { padding: 8, borderRadius: 4 },
   editText: { color: "#FFF", fontWeight: "bold" },
   deleteButton: { padding: 8, borderRadius: 4 },

@@ -32,5 +32,46 @@
   "placeholder_model": "ej: CG 160",
   "select_patio": "Seleccione el Patio:",
   "available_spots": "Espacios Disponibles:",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+
+  "manage_users": "Gestionar Usuarios",
+  "manage_yards": "Gestionar Patios",
+  "current_language": "Idioma actual",
+  "units": "Unidades",
+  "error_loading_units": "No se pudieron cargar las unidades.",
+  "error_saving_unit": "No se pudo guardar la unidad.",
+  "error_deleting_unit": "No se pudo eliminar la unidad.",
+  "fill_code_name": "¡Complete código y nombre!",
+  "unit_created": "¡Unidad creada!",
+  "unit_updated": "¡Unidad actualizada!",
+  "success": "Éxito",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "active": "Activa",
+  "inactive": "Inactiva",
+  "code": "Código",
+  "name": "Nombre",
+  "note": "Observación",
+  "update_unit": "Actualizar Unidad",
+  "add_unit": "Agregar Unidad",
+  "manage_users": "Gestionar Usuarios",
+  "error_loading_users": "No se pudieron cargar los usuarios.",
+  "error_saving_user": "No se pudo guardar el usuario.",
+  "error_deleting_user": "No se pudo eliminar el usuario.",
+  "fill_all_fields": "Complete todos los campos.",
+  "user_updated": "¡Usuario actualizado!",
+  "user_created": "¡Usuario creado!",
+  "user_deleted": "¡Usuario eliminado!",
+  "success": "Éxito",
+  "name": "Nombre",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "update": "Actualizar",
+  "register": "Registrar",
+  "edit": "Editar",
+  "delete": "Eliminar"
+
+
+
+
 }

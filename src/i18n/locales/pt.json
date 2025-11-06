@@ -32,5 +32,47 @@
   "placeholder_model": "ex: CG 160",
   "select_patio": "Selecione o Pátio:",
   "available_spots": "Vagas Disponíveis:",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+
+  "manage_users": "Gerenciar Usuários",
+  "manage_yards": "Gerenciar Pátios",
+  "current_language": "Idioma atual",
+  "units": "Unidades",
+  "error_loading_units": "Não foi possível carregar as unidades.",
+  "error_saving_unit": "Não foi possível salvar a unidade.",
+  "error_deleting_unit": "Não foi possível deletar a unidade.",
+  "fill_code_name": "Preencha código e nome!",
+  "unit_created": "Unidade criada!",
+  "unit_updated": "Unidade atualizada!",
+  "success": "Sucesso",
+  "edit": "Editar",
+  "delete": "Excluir",
+  "active": "Ativa",
+  "inactive": "Inativa",
+  "code": "Código",
+  "name": "Nome",
+  "note": "Observação",
+  "update_unit": "Atualizar Unidade",
+  "add_unit": "Adicionar Unidade",
+  "manage_users": "Gerenciar Usuários",
+  "error_loading_users": "Não foi possível carregar os usuários.",
+  "error_saving_user": "Não foi possível salvar o usuário.",
+  "error_deleting_user": "Não foi possível deletar o usuário.",
+  "fill_all_fields": "Preencha todos os campos.",
+  "user_updated": "Usuário atualizado!",
+  "user_created": "Usuário criado!",
+  "user_deleted": "Usuário deletado!",
+  "success": "Sucesso",
+  "name": "Nome",
+  "email": "E-mail",
+  "password": "Senha",
+  "update": "Atualizar",
+  "register": "Cadastrar",
+  "edit": "Editar",
+  "delete": "Excluir"
+
+
+
+  
+  
 }

@@ -32,5 +32,48 @@
   "placeholder_model": "e.g. CG 160",
   "select_patio": "Select Yard:",
   "available_spots": "Available Spots:",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+
+  "manage_users": "Manage Users",
+  "manage_yards": "Manage Yards",
+  "current_language": "Current language",
+  "units": "Units",
+  "error_loading_units": "Unable to load units.",
+  "error_saving_unit": "Unable to save the unit.",
+  "error_deleting_unit": "Unable to delete the unit.",
+  "fill_code_name": "Please fill code and name!",
+  "unit_created": "Unit created!",
+  "unit_updated": "Unit updated!",
+  "success": "Success",
+  "edit": "Edit",
+  "delete": "Delete",
+  "active": "Active",
+  "inactive": "Inactive",
+  "code": "Code",
+  "name": "Name",
+  "note": "Note",
+  "update_unit": "Update Unit",
+  "add_unit": "Add Unit",
+  "manage_users": "Manage Users",
+  "error_loading_users": "Unable to load users.",
+  "error_saving_user": "Unable to save user.",
+  "error_deleting_user": "Unable to delete user.",
+  "fill_all_fields": "Please fill in all fields.",
+  "user_updated": "User updated!",
+  "user_created": "User created!",
+  "user_deleted": "User deleted!",
+  "success": "Success",
+  "name": "Name",
+  "email": "Email",
+  "password": "Password",
+  "update": "Update",
+  "register": "Register",
+  "edit": "Edit",
+  "delete": "Delete"
+
+
+
+
+
+  
 }

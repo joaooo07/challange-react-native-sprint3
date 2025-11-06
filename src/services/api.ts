@@ -1,25 +1,25 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const api = axios.create({
-  baseURL: "http://localhost:5263/api",
+  baseURL: "http://localhost:5263/api",// "http://localhost:5263/api","http://192.168.0.158:5263/api"
 });
 
-let authToken: string | null = localStorage.getItem("accessToken");
+let authToken: string | null = null;
 
-export const setAuthToken = (token: string | null) => {
+export const setAuthToken = async (token: string | null) => {
   authToken = token;
-  if (token) localStorage.setItem("accessToken", token);
-  else localStorage.removeItem("accessToken");
+  if (token) {
+    await AsyncStorage.setItem("accessToken", token);
+  } else {
+    await AsyncStorage.removeItem("accessToken");
+  }
 };
 
-
-api.interceptors.request.use((config) => {
-  const token = authToken || localStorage.getItem("accessToken");
+api.interceptors.request.use(async (config) => {
+  const token = authToken || (await AsyncStorage.getItem("accessToken"));
   if (token) {
-
-    const finalToken = token.startsWith("Bearer ")
-      ? token
-      : `Bearer ${token}`;
+    const finalToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
 
     if (config.headers?.set) {
       config.headers.set("Authorization", finalToken);
