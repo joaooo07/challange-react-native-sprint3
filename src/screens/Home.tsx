@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '@/navigation';
-import { useTranslation } from 'react-i18next'; 
-import { useAppTheme } from '@/navigation'
-
+import { RootStackParamList, useAppTheme } from '@/navigation';
+import { useTranslation } from 'react-i18next';
+import { sendLocalNotification } from '@/hooks/usePushNotifications';
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -17,6 +16,17 @@ const Home: React.FC = () => {
   if (!i18n.isInitialized) {
     return <Text style={{ color: theme.colors.text }}>Carregando idioma...</Text>;
   }
+
+  const handleNotificationTest = async () => {
+    const title = "Mottu Informa";
+    const body = "Pátio de BMW na Unidade 1 está lotado";
+
+    if (Platform.OS === 'web') {
+      window.alert(`${title}\n\n${body}`); // ✅ funciona na web
+    } else {
+      await sendLocalNotification(title, body); // ✅ nativo (Android/iOS)
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -35,7 +45,7 @@ const Home: React.FC = () => {
 
       <TouchableOpacity
         style={[styles.button, { backgroundColor: theme.colors.primary }]}
-        onPress={() => navigation.navigate('FormEntry', { slotId: "123", patioId: "p1" })}
+        onPress={() => navigation.navigate('FormEntry', { slotId: '123', patioId: 'p1' })}
       >
         <Text style={[styles.buttonText, { color: theme.colors.text }]}>
           {t('form_entry')}
@@ -53,7 +63,7 @@ const Home: React.FC = () => {
 
       <TouchableOpacity
         style={[styles.button, { backgroundColor: theme.colors.primary }]}
-        onPress={() => navigation.navigate("Units")}
+        onPress={() => navigation.navigate('Units')}
       >
         <Text style={[styles.buttonText, { color: theme.colors.text }]}>
           {t('manage_yards')}
@@ -66,6 +76,16 @@ const Home: React.FC = () => {
       >
         <Text style={[styles.buttonText, { color: theme.colors.text }]}>
           {t('profile')}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Botão de teste de notificação */}
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: '#00A859' }]}
+        onPress={handleNotificationTest}
+      >
+        <Text style={[styles.buttonText, { color: '#fff' }]}>
+          Últimas Notícias
         </Text>
       </TouchableOpacity>
     </View>

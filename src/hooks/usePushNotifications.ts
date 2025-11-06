@@ -3,13 +3,36 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { Platform } from "react-native";
 
-export default function usePushNotifications() {
+if (Notifications.setNotificationHandler) {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+}
+
+export type UsePushReturn = {
+  expoPushToken: string | null;
+  permissionStatus: "granted" | "denied" | "undetermined";
+  requestPermission: () => Promise<void>;
+  sendLocalNotification: (title?: string, body?: string) => Promise<void>;
+};
+
+export default function usePushNotifications(): UsePushReturn {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
+  const [permissionStatus, setPermissionStatus] = useState<
+    "granted" | "denied" | "undetermined"
+  >("undetermined");
+
   const notificationListener = useRef<Notifications.Subscription | null>(null);
   const responseListener = useRef<Notifications.Subscription | null>(null);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(setExpoPushToken);
+    checkPermission(); // apenas checa silenciosamente
 
     notificationListener.current = Notifications.addNotificationReceivedListener(
       (notification) => {
@@ -17,53 +40,49 @@ export default function usePushNotifications() {
       }
     );
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
         console.log("👆 Interação com notificação:", response);
-      }
-    );
+      });
 
-    // cleanup atualizado
     return () => {
       notificationListener.current?.remove();
       responseListener.current?.remove();
     };
   }, []);
 
-  return expoPushToken;
+  const checkPermission = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    setPermissionStatus(status);
+    if (status === "granted") {
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      setExpoPushToken(token);
+    }
+  };
+
+  const requestPermission = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    setPermissionStatus(status);
+
+    if (status === "granted") {
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      setExpoPushToken(token);
+      console.log("🔑 Expo Push Token:", token);
+    } else {
+      console.warn("🚫 Permissão negada para notificações");
+    }
+  };
+
+  return { expoPushToken, permissionStatus, requestPermission, sendLocalNotification };
 }
 
-async function registerForPushNotificationsAsync(): Promise<string | null> {
-  let token: string | null = null;
 
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-
-    if (finalStatus !== "granted") {
-      alert("⚠️ Permissão para notificações não concedida.");
-      return null;
-    }
-
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log("Expo Push Token:", token);
-  } else {
-    alert("📱 É necessário um dispositivo físico para testar notificações push.");
-  }
-
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#001836",
-    });
-  }
-
-  return token;
+export async function sendLocalNotification(
+  title = "Mottu Informa",
+  body = "Patio de BMW na Unidade 1 está lotado"
+) {
+  await Notifications.scheduleNotificationAsync({
+    content: { title, body, sound: true },
+    trigger: null,
+  });
 }
