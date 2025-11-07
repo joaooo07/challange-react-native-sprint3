@@ -1,5 +1,3 @@
----
-
 # 📱 Challenge React Native – Sprint 4
 
 **Autor:** João Pedro Motta
